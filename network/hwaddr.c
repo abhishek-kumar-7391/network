@@ -31,8 +31,6 @@ int get_hw_addr(const char* iface)
 	}
 
 	strcpy(dev.ifr_name, iface);
-	fprintf(stdout, "dev name = %s\n", dev.ifr_name);
-	
 	sockfd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if(sockfd<0)
 	{
@@ -43,10 +41,17 @@ int get_hw_addr(const char* iface)
 	fprintf(stdout, "ioctl = %d\n", ioctl(sockfd, SIOCGIFHWADDR, &dev));
 	int i;
 	for(i=0;i<6;++i){
-		fprintf(stdout, "%x", (unsigned char)dev.ifr_addr.sa_data[i]);
-		if(i<5)
-			fprintf(stdout, ":");
+		fprintf(stdout, "%u\n", dev.ifr_addr.sa_data[i]&0x000000ff);
+		//if(i<5)
+		//	fprintf(stdout, ":");
+	}
+	fprintf(stdout, "\n\n");
+	for(i=0;i<6;++i){
+		fprintf(stdout, "%x\n", dev.ifr_addr.sa_data[i]&0x000000ff);
+		//if(i<5)
+		//	fprintf(stdout, ":");
 	}
 	fprintf(stdout, "\n, size = %d\n", IFNAMSIZ);
+
 	return 0;
 }
